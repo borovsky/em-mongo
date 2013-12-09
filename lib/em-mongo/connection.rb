@@ -116,6 +116,7 @@ module EM::Mongo
       @on_unbind     = options[:unbind_cb]   || proc {}
       @reconnect_in  = options[:reconnect_in]|| false
       @slave_ok      = options[:slave_ok]    || false
+      @max_retries   = options[:max_retries] || MAX_RETRIES
 
       @on_close = proc {
         raise Error, "failure with mongodb server #{@host}:#{@port}"
@@ -193,7 +194,7 @@ module EM::Mongo
 
       set_deferred_status(nil)
 
-      if @reconnect_in && @retries < MAX_RETRIES
+      if @reconnect_in && @retries < @max_retries
         EM.add_timer(@reconnect_in) { reconnect(@host, @port) }
       elsif @on_unbind
         @on_unbind.call
