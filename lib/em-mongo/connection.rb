@@ -274,5 +274,9 @@ module EM::Mongo
     # @return [Boolean]
     def slave_ok?;@em_connection.slave_ok?;end
 
+    # Registers callback to be executed after connection
+    def callback(&block)
+      @em_connection.callback(&block)
+    end
   end
 end
